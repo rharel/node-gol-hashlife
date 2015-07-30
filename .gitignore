@@ -1,0 +1,11 @@
+# Project-specific excludes
+lib/*.js
+lib/*.js.map
+test/*.js
+test/*.js.map
+
+# Node.js-specific excludes
+node_modules
+
+# Code editor-specific excludes
+.idea

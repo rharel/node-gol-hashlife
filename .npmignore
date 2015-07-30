@@ -1,0 +1,4 @@
+# Code editor-specific excludes
+.idea
+.gitignore
+.travis.yml
