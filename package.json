@@ -1,15 +1,15 @@
 {
-  "name": "node-wa-tor",
+  "name": "node-gol-hashlife",
   "description": "Wa-Tor population dynamics simulation for Node.js and the browser.",
   "version": "0.1.0",
-  "homepage": "https://github.com/rharel/node-wa-tor",
+  "homepage": "https://github.com/rharel/node-gol-hashlife",
   "author": {
     "name": "Raoul Harel",
     "homepage": "https://github.com/rharel"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/rharel/node-wa-tor.git"
+    "url": "https://github.com/rharel/node-gol-hashlife.git"
   },
   "licenses": [
     {

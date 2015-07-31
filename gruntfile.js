@@ -2,7 +2,7 @@
  @author Raoul Harel
  @license The MIT license (LICENSE.txt)
  @copyright 2015 Raoul Harel
- @url rharel/node-wa-tor on GitHub
+ @url rharel/node-gol-hashlife on GitHub
 */
 
 module.exports = function(grunt) {
