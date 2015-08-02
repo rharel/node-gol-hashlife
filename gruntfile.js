@@ -69,7 +69,7 @@ module.exports = function(grunt) {
       },
       release: {
         files: {
-          '<%= dist_dir %>/avl.js': '<%= lib_dir %>/avl.coffee'
+          '<%= dist_dir %>/gol.js': '<%= lib_dir %>/gol.coffee'
         }
       }
     },
@@ -80,18 +80,16 @@ module.exports = function(grunt) {
         reporter: 'spec',
         bail: true
       },
-      unit: ['<%= test_dir %>/avl_unit.test.js'],
-      integration: ['<%= test_dir %>/avl_integration.test.js'],
+      unit: ['<%= test_dir %>/macro_cell_unit.test.js'],
       all: [
-        '<%= test_dir %>/avl_unit.test.js',
-        '<%= test_dir %>/avl_integration.test.js'
+        '<%= test_dir %>/macro_cell_unit.test.js'
       ]
     },
 
     uglify: {
       release: {
         files: {
-          '<%= dist_dir %>/avl.min.js': ['<%= dist_dir %>/avl.js']
+          '<%= dist_dir %>/gol.min.js': ['<%= dist_dir %>/gol.js']
         }
       }
     }
