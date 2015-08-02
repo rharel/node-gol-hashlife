@@ -7,24 +7,21 @@ should = require('should')
 expect = require('chai').expect
 
 should_have_children = (cell, nw, ne, sw, se) ->
-  cell.nw.should.be.equal nw
-  cell.ne.should.be.equal ne
-  cell.sw.should.be.equal sw
-  cell.se.should.be.equal se
+  cell.nw.should.be.equal(nw)
+  cell.ne.should.be.equal(ne)
+  cell.sw.should.be.equal(sw)
+  cell.se.should.be.equal(se)
 
 it_should_flush_to = (cell, expected) ->
-  if typeof expected[0] isnt 'boolean'
-    expected = ((!!expected[i]) for i in [0...expected.length])
-
   it 'should flush to...', ->
-    expect(cell.to_array()).to.be.deep.equal expected
+    expect(cell.to_array()).to.be.deep.equal(expected)
 
 describe 'macro-cell unit', ->
   describe 'default initialization', ->
     describe 'level 1', ->
       m = new MacroCell
       it 'should be level 1', ->
-        m.level.should.be.equal 1
+        m.level.should.be.equal(1)
       it 'should be dead', ->
         should_have_children(m, dead, dead, dead, dead)
     describe 'level 2', ->
@@ -35,7 +32,7 @@ describe 'macro-cell unit', ->
       m = new MacroCell(nw, ne, sw, se)
 
       it 'should be level 2', ->
-        m.level.should.be.equal 2
+        m.level.should.be.equal(2)
       it 'should be dead', ->
         should_have_children(m.nw, dead, dead, dead, dead)
         should_have_children(m.ne, dead, dead, dead, dead)
@@ -50,7 +47,7 @@ describe 'macro-cell unit', ->
       ])
 
       it 'should be level 1', ->
-        m.level.should.be.equal 1
+        m.level.should.be.equal(1)
       it 'should match the array', ->
         should_have_children(m, dead, alive, alive, dead)
 
@@ -63,7 +60,7 @@ describe 'macro-cell unit', ->
       ])
 
       it 'should be level 2', ->
-        m.level.should.be.equal 2
+        m.level.should.be.equal(2)
       it 'should match the array', ->
         should_have_children(m.nw, alive, dead, dead, dead)
         should_have_children(m.ne, dead, alive, dead, dead)
@@ -162,18 +159,22 @@ describe 'macro-cell unit', ->
       test_case = (name, nNeighbours, expected_state) ->
         describe name, ->
           nw = new MacroCell(
-            nNeighbours > 0, nNeighbours > 1, nNeighbours > 2, alive)
+            nNeighbours > 0, nNeighbours > 1,
+            nNeighbours > 2, alive)
           ne = new MacroCell(
-            nNeighbours > 3, dead, nNeighbours > 4, dead)
+            nNeighbours > 3, dead,
+            nNeighbours > 4, dead)
           sw = new MacroCell(
-            nNeighbours > 5, nNeighbours > 6, dead, dead)
+            nNeighbours > 5, nNeighbours > 6,
+            dead, dead)
           se = new MacroCell(
-            nNeighbours > 7, dead, dead, dead)
+            nNeighbours > 7, dead,
+            dead, dead)
           m = new MacroCell(nw, ne, sw, se)
           r = m.compute_result()
 
           it "should be #{if expected_state then 'alive' else 'dead'}", ->
-            r.nw.should.be.equal expected_state
+            r.nw.should.be.equal(expected_state)
 
       test_case("living cell with #{i} living neighbours", i,
         if i < 2 or i > 3 then dead else alive) \
@@ -217,3 +218,25 @@ describe 'macro-cell unit', ->
           1, 0, 1, 0,
           0, 1, 1, 0
         ])
+
+  describe 'hash', ->
+    it 'should equal the binary representation for level 1 cells', ->
+      result = []
+      result.push(MacroCell.get_hash(a, b, c, d)) \
+        for a in [dead, alive] \
+        for b in [dead, alive] \
+        for c in [dead, alive] \
+        for d in [dead, alive]
+
+      result.sort()
+        .should.be.eql(
+          [0...16].map((x) -> x.toString()).sort())
+
+    it 'should be equal the combination of child ids for level >=2 cells', ->
+      nw = new MacroCell; nw.id = 0
+      ne = new MacroCell; ne.id = 1
+      sw = new MacroCell; sw.id = 2
+      se = new MacroCell; se.id = 3
+      m = new MacroCell(nw, ne, sw, se)
+
+      m.hash.should.be.equal('0-1-2-3')

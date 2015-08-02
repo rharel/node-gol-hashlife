@@ -12,11 +12,13 @@
   is to be considered a private implementation detail.
 ###
 
-dead = false
-alive = true
+dead = 0
+alive = 1
+
+_to_int = (b) -> if b then alive else dead
 
 _step_single = (cell, neighbours) ->
-  nLiving = neighbours.filter((x) -> x is alive).length
+  nLiving = neighbours.filter((x) -> (x isnt dead)).length
   if nLiving < 2 or nLiving > 3
     return dead
   else if nLiving is 2
@@ -35,6 +37,7 @@ _split_rows = (c) ->
   (a.push(c[i][0...c.length]); b.push(c[i][c.length...2 * c.length])) \
     for i in [0...c.length]
   return [a, b]
+
 
 ###
   A macro-cell is an analogue of a quad-tree node in the Hashlife algorithm.
@@ -67,18 +70,30 @@ class MacroCell
         MacroCell._from_row_array(se_rows)
       )
 
+  @get_hash: (nw, ne, sw, se) ->
+    if nw instanceof MacroCell
+      return [nw, ne, sw, se].map((x) -> x.id).join('-')
+    else
+      return ((nw << 3) |
+              (ne << 2) |
+              (sw << 1) |
+               se).toString()
+
   constructor: (
     @nw = dead, @ne = dead,
-    @sw = dead, @se = dead) ->
+    @sw = dead, @se = dead, @id = 0) ->
       if @nw instanceof MacroCell
         @level = @nw.level + 1
       else
-        @level = 1
-        if typeof @nw isnt 'boolean'
-          @nw = !!@nw; @ne = !!@ne;
-          @sw = !!@sw; @se = !!@se;
-      @_result = null
+        @level = 1;
+        if typeof @nw isnt 'number'
+          @nw = _to_int(@nw)
+          @ne = _to_int(@ne)
+          @sw = _to_int(@sw)
+          @se = _to_int(@se)
 
+      @hash = MacroCell.get_hash(@nw, @ne, @sw, @se)
+      @_result = null
 
   _to_row_array: ->
     if @level is 1
@@ -135,6 +150,32 @@ class MacroCell
     else if @level > 2
       return @_result = @_recursive_case()
 
+
+###
+  The hashlife algorithm takes advantage of pattern-redundancy in the
+  simulation. It does so by macro-cell reuse. Every time a new macro-cell is
+  needed, the library will first check if it has not already been computed, and
+  if it has, then it yields a reference to the existing instance.
+
+  In order to quickly match a given macro-cell with the library's existing
+  collection, we use a hash-table. When creating a new cell, it is given a
+  unique hash string - it is a combination of its children's hashes.
+###
+class CellLibrary
+  constructor: ->
+    @_id = 0  # we start at 2 since IDs 0 and 1 are reserved for the 1x1
+              # atomic 'dead' and 'alive' cells.
+    @_hashmap = new Object()
+
+  get: (nw, ne, sw, se) ->
+    hash = MacroCell.get_hash(nw, ne, sw, se)
+    if !@_hashmap[hash]?
+      @_hashmap[hash] = new MacroCell(nw, ne, sw, se, @_id)
+      ++ @_id
+    return @_hashmap[hash]
+
+
+
 ###
   Simulates an infinite cell grid running Conway's Game of Life (GOL).
   In GOL, a cell can be either dead or alive. The simulation proceeds in
@@ -151,8 +192,10 @@ class GameOfLife
 root = this
 if module?.exports?
   module.exports.MacroCell = MacroCell
+  module.exports.CellLibrary = CellLibrary
   module.exports.dead = dead
   module.exports.alive = alive
 root.MacroCell = MacroCell
+root.CellLibrary = CellLibrary
 root.dead = dead
 root.alive = alive
