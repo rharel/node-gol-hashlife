@@ -13,7 +13,13 @@ Import either into Node.js using `require("wa-tor")` or directly include in the 
 
 ### Create
 ```javascript
-var g = new GameOfLife();
+var gol = require('gol')
+var g = new gol.Simulation(4)  // 2^4 x 2^4 = 16x16 universe
+```
+
+### Set a pattern
+```javascript
+
 ```
 
 ## License

@@ -21,9 +21,12 @@ describe 'macro-cell unit', ->
     describe 'level 1', ->
       m = new MacroCell
       it 'should be level 1', ->
-        m.level.should.be.equal(1)
-      it 'should be dead', ->
+        m.level().should.be.equal(1)
+      it 'should have dead chlidren', ->
         should_have_children(m, dead, dead, dead, dead)
+      it 'should have 0 living count', ->
+        m.population().should.be.equal(0)
+
     describe 'level 2', ->
       nw = new MacroCell
       ne = new MacroCell
@@ -32,7 +35,9 @@ describe 'macro-cell unit', ->
       m = new MacroCell(nw, ne, sw, se)
 
       it 'should be level 2', ->
-        m.level.should.be.equal(2)
+        m.level().should.be.equal(2)
+      it 'should have 0 living count', ->
+        m.population().should.be.equal(0)
       it 'should be dead', ->
         should_have_children(m.nw, dead, dead, dead, dead)
         should_have_children(m.ne, dead, dead, dead, dead)
@@ -47,9 +52,11 @@ describe 'macro-cell unit', ->
       ])
 
       it 'should be level 1', ->
-        m.level.should.be.equal(1)
+        m.level().should.be.equal(1)
       it 'should match the array', ->
         should_have_children(m, dead, alive, alive, dead)
+      it 'should have 2 living count', ->
+        m.population().should.be.equal(2)
 
     describe 'level 2', ->
       m = MacroCell.from_array([
@@ -60,7 +67,9 @@ describe 'macro-cell unit', ->
       ])
 
       it 'should be level 2', ->
-        m.level.should.be.equal(2)
+        m.level().should.be.equal(2)
+      it 'should have 4 living count', ->
+        m.population().should.be.equal(4)
       it 'should match the array', ->
         should_have_children(m.nw, alive, dead, dead, dead)
         should_have_children(m.ne, dead, alive, dead, dead)
@@ -81,7 +90,9 @@ describe 'macro-cell unit', ->
       m = MacroCell.from_array(a)
 
       it 'should be level 3', ->
-        m.level.should.be.equal 3
+        m.level().should.be.equal(3)
+      it 'should have 20 living count', ->
+        m.population().should.be.equal(20)
       it 'should match the array', ->
         should_have_children(m.nw.nw, dead, dead, dead, alive)
         should_have_children(m.nw.ne, dead, dead, alive, dead)
@@ -171,7 +182,7 @@ describe 'macro-cell unit', ->
             nNeighbours > 7, dead,
             dead, dead)
           m = new MacroCell(nw, ne, sw, se)
-          r = m.compute_result()
+          r = m.future()
 
           it "should be #{if expected_state then 'alive' else 'dead'}", ->
             r.nw.should.be.equal(expected_state)
@@ -199,7 +210,7 @@ describe 'macro-cell unit', ->
         it 'should have center composed of [nw.se, ne.sw, sw.ne, se.nw]', ->
           should_have_children(m.c(), nw.se, ne.sw, sw.ne, se.nw)
 
-      describe 'result', ->
+      describe 'future', ->
         m = MacroCell.from_array([
           0, 0, 0, 0, 0, 0, 0, 0,
           0, 0, 0, 0, 0, 0, 0, 0,
@@ -210,7 +221,7 @@ describe 'macro-cell unit', ->
           0, 0, 0, 0, 0, 0, 0, 0,
           0, 0, 0, 0, 0, 0, 0, 0
         ])
-        r = m.compute_result()
+        r = m.future()
 
         it_should_flush_to(r, [
           0, 0, 0, 0,
@@ -219,24 +230,3 @@ describe 'macro-cell unit', ->
           0, 1, 1, 0
         ])
 
-  describe 'hash', ->
-    it 'should equal the binary representation for level 1 cells', ->
-      result = []
-      result.push(MacroCell.get_hash(a, b, c, d)) \
-        for a in [dead, alive] \
-        for b in [dead, alive] \
-        for c in [dead, alive] \
-        for d in [dead, alive]
-
-      result.sort()
-        .should.be.eql(
-          [0...16].map((x) -> x.toString()).sort())
-
-    it 'should be equal the combination of child ids for level >=2 cells', ->
-      nw = new MacroCell; nw.id = 0
-      ne = new MacroCell; ne.id = 1
-      sw = new MacroCell; sw.id = 2
-      se = new MacroCell; se.id = 3
-      m = new MacroCell(nw, ne, sw, se)
-
-      m.hash.should.be.equal('0-1-2-3')

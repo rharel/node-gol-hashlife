@@ -80,9 +80,9 @@ module.exports = function(grunt) {
         reporter: 'spec',
         bail: true
       },
-      unit: ['<%= test_dir %>/macro_cell_unit.test.js'],
+      unit: ['<%= test_dir %>/macrocell_unit.test.js'],
       all: [
-        '<%= test_dir %>/macro_cell_unit.test.js'
+        '<%= test_dir %>/macrocell_unit.test.js'
       ]
     },
 
