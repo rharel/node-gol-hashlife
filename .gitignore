@@ -12,3 +12,4 @@ node_modules/
 
 # Code editor-specific excludes
 .idea/
+npm-debug.log
