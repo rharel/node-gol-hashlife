@@ -1,7 +1,16 @@
+###
+ @author Raoul Harel
+ @license The MIT license (LICENSE.txt)
+ @copyright 2015 Raoul Harel
+ @url rharel/node-gol-hashlife on GitHub
+###
+
 measure = require('./measure')
 helpers = require('./../helpers')
 from_rle = helpers.from_rle
 
+
+# Patterns were independently generated using Golly (golly.sourceforge.net)
 
 # The 'rabbits' pattern at t = 0
 gen0 = from_rle(0, 0, 7, 3, 'o3b3o$3o2bo$bo!')

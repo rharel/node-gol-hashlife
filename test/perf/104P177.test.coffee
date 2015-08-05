@@ -1,3 +1,10 @@
+###
+ @author Raoul Harel
+ @license The MIT license (LICENSE.txt)
+ @copyright 2015 Raoul Harel
+ @url rharel/node-gol-hashlife on GitHub
+###
+  
 measure = require('./measure')
 helpers = require('./../helpers')
 from_rle = helpers.from_rle

@@ -1,3 +1,10 @@
+###
+ @author Raoul Harel
+ @license The MIT license (LICENSE.txt)
+ @copyright 2015 Raoul Harel
+ @url rharel/node-gol-hashlife on GitHub
+###
+  
 # Sorts array of positions
 exports.by_x_then_y = (a, b) ->
   c = a.x - b.x

@@ -17,6 +17,17 @@ alive = 1
 
 _to_int = (b) -> if b then alive else dead
 
+###
+  Returns a filtered array with only unique elements.
+
+  @param  a     Array to filter.
+  @param  hash  Hashing function.
+
+  @details
+    In order to determine uniqueness, the algorithm uses a hash-table.
+    The caller of this method should supply a suitable hashing function
+    for the objects expected to populate the given array.
+###
 _remove_duplicates = (a, hash) ->
   seen = new Object
   return a.filter(
@@ -28,6 +39,13 @@ _remove_duplicates = (a, hash) ->
         return seen[key] = true
   )
 
+###
+  Steps a single cell in accordance to the count of Moore's living neighbours
+  it has.
+
+  @param  cell                Dead or alive.
+  @param  nLivingNeighbours   # of Moore neighbours that are alive
+###
 _step_single = (cell, nLivingNeighbours) ->
   nLiving = nLivingNeighbours + cell
   if nLiving is 3
@@ -37,11 +55,19 @@ _step_single = (cell, nLivingNeighbours) ->
   else
     return dead
 
+###
+  Given two 2D-arrays A and B, returns a new array C whose elements are
+  C[i] = concat(A[i], B[i])
+###
 _join_rows = (a, b) ->
   result = []
   result.push(a[i].concat(b[i])) for i in [0...a.length]
   return result
 
+###
+  Given an array C, splits each child of C into two halves, and gives one to
+  an array A and the other to B. Returns [A, B]
+###
 _split_rows = (c) ->
   a = []
   b = []
@@ -49,15 +75,17 @@ _split_rows = (c) ->
     for i in [0...c.length]
   return [a, b]
 
+
+
 ###
   A macro-cell is an analogue of a quad-tree node in the Hashlife algorithm.
   A macro-cell size is a power of two. Given a macro-cell of size 2^n, we say
-  it's level is n.
+  its level is n.
 
   Aside from the four (n-1) child-macro-cells (as in a quad-tree), we also make
   use of a fifth (n-1) child located at the center of the macro-cell. This
   child contains the state of the simulation after 2^(n-2) steps. We refer
-  to this fifth child as the 'result' of its parent macro-cell.
+  to this fifth child as the 'future' of its parent macro-cell.
 ###
 class MacroCell
   @from_array: (a) ->
@@ -206,24 +234,40 @@ class Library
 
 ###
   Simulates a cell grid running Conway's Game of Life (GOL).
-  In GOL, a cell can be either dead or alive. The simulation proceeds in
-  discrete time steps and cells evolve according to the following rules:
-    1. A living cell with fewer than 2 living neighbours dies from isolation.
-    2. A living cell with more than 3 living neighbours dies from overcrowding.
-    3. A dead cell with with exactly 3 living neighbours becomes alive due to
-       reproduction.
+
+  @details
+    In GOL, a cell can be either dead or alive. The simulation proceeds in
+    discrete time steps and cells evolve according to the following rules:
+      1. A living cell with fewer than 2 living neighbours dies from isolation.
+      2. A living cell with more than 3 living neighbours dies from overcrowding.
+      3. A dead cell with with exactly 3 living neighbours becomes alive due to
+         reproduction.
+
+    The hashlife algorithm is not suitable for following the simulation one
+    generation at a time, but it is extremely efficient at computing its state
+    by steps that are a power of two.
+
+    If you are interested in the 2^n-th generation of a pattern, you should
+    create a simulation with universe size k = n + 2, since a universe with
+    size 2^k can compute up to 2^(k-2) generations into the future.
 ###
 class Simulation
-  constructor: (@_level) ->
-    @time = 0
-    @_size = 2 ** @_level
-    @_init_library()
+  ###
+    @param  exp   Universe size exponent
 
-  _init_library: ->
+    @details
+      Creates a universe with size 2^exp, capable of computing 2^(exp - 2)
+      generations into the future.
+  ###
+  constructor: (exp) ->
+    @_size = 2 ** exp
+    @_init_library(exp)
+
+  _init_library: (level) ->
     @_library = new Library
     @_root = @_library.get(dead, dead, dead, dead)
     i = 1
-    while i < @_level
+    while i < level
       @_root = @_library.get(@_root, @_root, @_root, @_root)
       ++i
 

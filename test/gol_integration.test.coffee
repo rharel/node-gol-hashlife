@@ -1,3 +1,10 @@
+###
+ @author Raoul Harel
+ @license The MIT license (LICENSE.txt)
+ @copyright 2015 Raoul Harel
+ @url rharel/node-gol-hashlife on GitHub
+###
+  
 gol = require('../lib/gol')
 Simulation = gol.Simulation
 dead = gol.dead
