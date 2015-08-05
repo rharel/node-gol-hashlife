@@ -11,7 +11,6 @@ dead = gol.dead
 alive = gol.alive
 
 should = require('should')
-expect = require('chai').expect
 
 describe 'library unit', ->
   describe 'initialization', ->

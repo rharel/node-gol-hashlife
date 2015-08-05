@@ -11,7 +11,6 @@ dead = gol.dead
 alive = gol.alive
 
 should = require('should')
-expect = require('chai').expect
 
 should_have_children = (cell, nw, ne, sw, se) ->
   cell.nw.should.be.equal(nw)
@@ -21,7 +20,7 @@ should_have_children = (cell, nw, ne, sw, se) ->
 
 it_should_flush_to = (cell, expected) ->
   it 'should flush to...', ->
-    expect(cell.to_array()).to.be.deep.equal(expected)
+    cell.to_array().should.be.eql(expected)
 
 describe 'macro-cell unit', ->
   describe 'default initialization', ->
@@ -128,7 +127,7 @@ describe 'macro-cell unit', ->
         m = new MacroCell(nw, ne, sw, se)
 
         it name, ->
-          expect(m.to_array()).to.be.deep.equal expected
+          m.to_array().should.be.eql(expected)
 
       test_case("should flush [#{a}, #{b}, #{c}, #{d}]", a, b, c, d) \
         for a in [dead, alive] \

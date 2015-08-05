@@ -15,7 +15,6 @@ by_x_then_y = helpers.by_x_then_y
 from_rle = helpers.from_rle
 
 should = require('should')
-expect = require('chai').expect
 
 describe 'gol integration', ->
   describe 'initialization', ->
