@@ -8,8 +8,7 @@
 
 You should use hashlife for:
   - Patterns containing a lot of redundancy (sub-patterns that show up often).
-  - Far future evolution of the simulation.
-  - Memory is not an issue.
+  - Far-future evolution of the simulation.
 
 Conversely, you shouldn't use hashlife for:
   - Highly chaotic patterns.
@@ -30,7 +29,7 @@ Lets take a look at a basic example. Say we wish to view the evolution of the [g
 ### Create a universe
 Universe size is important. The amount of generations we can simulate in the future depends on it. A universe's size is always a power of two, and a universe with size 2<sup>n</sup> can simulate 2<sup>n - 2</sup> generations ahead.
 
-Suppose we are interested in the glider's evolution two generations into the future. For that, we will need a universe of size 8x8, since 8 = 2^3 which means we can now simulate the pattern 2^(3 - 1) = 2 generations ahead.
+Suppose we are interested in the glider's evolution two generations into the future. For that, we will need a universe of size 8x8, since 8 = 2^3 which means we can now simulate the pattern 2<sup>(3 - 1)</sup> generations ahead.
 
 ```javascript
 var gol = require('gol');
@@ -60,7 +59,7 @@ var gen0 = [
     {x:  0, y:  0}
 ];
 
-// Populate universe with our glider
+// Populate the universe with our glider
 for (i in gen0) {
     p = gen0[i]
     sim.set(p.x, p.y)  // Sets the cell to 'alive'
@@ -68,12 +67,23 @@ for (i in gen0) {
 ```
 
 ### Simulate and inspect
-Now that we have the glider in the universe, lets inspect its evolution. The simulation object allows us to view generations that are a power of two ahead.
+Now that we have the glider in the universe, lets inspect its evolution. The simulation object allows us to view generations that are a power of two ahead in time:
 ```javascript
 // Get all living cells 2 generations into the future:
-population = sim.get(1)
-```
+population = sim.get(1)  // 1 as in 2^1
 
+/* 
+	'population' now contains the following positions:
+    population == [
+        {x: -2, y: -1},
+        {x: -1, y: -2},
+        {x:  0, y: -2},
+        {x:  0, y: -1},
+        {x:  0, y:  0}
+    ]
+ */
+```
+Note that the hashlife algorithm evaluates this future state for the central quadrant of the universe. In our case we evaluated cells from (-2, -2) up to (2, 2) two generations into the future. Had we wanted to evaluate a larger neighbourhood, we'd need a larger universe.
 ## License
 
 This software is licensed under the **MIT License**. See the [LICENSE](LICENSE.txt) file for more information.
