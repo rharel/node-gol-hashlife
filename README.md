@@ -1,5 +1,5 @@
-[![NPM Version](https://badge.fury.io/js/node-avl-tree.png)](https://npmjs.org/package/node-gol-hashlife)
-[![Build Status](https://travis-ci.org/rharel/node-avl-tree.svg)](https://travis-ci.org/rharel/node-gol-hashlife)
+[![NPM Version](https://badge.fury.io/js/node-gol-hashlife.png)](https://npmjs.org/package/node-gol-hashlife)
+[![Build Status](https://travis-ci.org/rharel/node-gol-hashlife.svg)](https://travis-ci.org/rharel/node-gol-hashlife)
 [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com)
 
 ## Use case
