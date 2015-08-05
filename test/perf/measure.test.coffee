@@ -8,7 +8,7 @@
 gol = require('../../lib/gol')
 Simulation = gol.Simulation
 
-helpers = require('./../helpers')
+helpers = require('./../helpers.test')
 by_x_then_y = helpers.by_x_then_y
 
 assert = require('chai').assert

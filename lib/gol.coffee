@@ -114,27 +114,27 @@ class MacroCell
     @nw = dead, @ne = dead,
     @sw = dead, @se = dead,
     @id = 0, @library = MacroCell._default_library) ->
-      if @nw._level?
-        @_level = @nw._level + 1
-        @_population =
-          @nw._population + @ne._population +
-          @sw._population + @se._population
-        @n = @library.get(@nw.ne, @ne.nw, @nw.se, @ne.sw)
-        @s = @library.get(@sw.ne, @se.nw, @sw.se, @se.sw)
-        @w = @library.get(@nw.sw, @nw.se, @sw.nw, @sw.ne)
-        @e = @library.get(@ne.sw, @ne.se, @se.nw, @se.ne)
-        @c = @library.get(@nw.se, @ne.sw, @sw.ne, @se.nw)
-      else
-        @_level = 1;
-        @_population = @nw + @ne + @sw + @se
+    if @nw._level?
+      @_level = @nw._level + 1
+      @_population =
+        @nw._population + @ne._population +
+        @sw._population + @se._population
+      @n = @library.get(@nw.ne, @ne.nw, @nw.se, @ne.sw)
+      @s = @library.get(@sw.ne, @se.nw, @sw.se, @se.sw)
+      @w = @library.get(@nw.sw, @nw.se, @sw.nw, @sw.ne)
+      @e = @library.get(@ne.sw, @ne.se, @se.nw, @se.ne)
+      @c = @library.get(@nw.se, @ne.sw, @sw.ne, @se.nw)
+    else
+      @_level = 1
+      @_population = @nw + @ne + @sw + @se
 
-        if typeof @nw isnt 'number'
-          @nw = _to_int(@nw)
-          @ne = _to_int(@ne)
-          @sw = _to_int(@sw)
-          @se = _to_int(@se)
+      if typeof @nw isnt 'number'
+        @nw = _to_int(@nw)
+        @ne = _to_int(@ne)
+        @sw = _to_int(@sw)
+        @se = _to_int(@se)
 
-      @_result = null
+    @_result = null
 
   _to_row_array: ->
     if @_level is 1
@@ -239,7 +239,8 @@ class Library
     In GOL, a cell can be either dead or alive. The simulation proceeds in
     discrete time steps and cells evolve according to the following rules:
       1. A living cell with fewer than 2 living neighbours dies from isolation.
-      2. A living cell with more than 3 living neighbours dies from overcrowding.
+      2. A living cell with more than 3 living neighbours dies from over-
+         crowding.
       3. A dead cell with with exactly 3 living neighbours becomes alive due to
          reproduction.
 

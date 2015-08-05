@@ -10,7 +10,7 @@ Simulation = gol.Simulation
 dead = gol.dead
 alive = gol.alive
 
-helpers = require('./helpers')
+helpers = require('./helpers.test')
 by_x_then_y = helpers.by_x_then_y
 from_rle = helpers.from_rle
 

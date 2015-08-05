@@ -5,8 +5,8 @@
  @url rharel/node-gol-hashlife on GitHub
 ###
 
-measure = require('./measure')
-helpers = require('./../helpers')
+measure = require('./measure.test')
+helpers = require('./../helpers.test')
 from_rle = helpers.from_rle
 
 # Patterns were independently generated using Golly (golly.sourceforge.net)

@@ -76,13 +76,15 @@ module.exports = function(grunt) {
 
     mochacli: {
       options: {
-        require: ['should'],
+        require: ['should', 'expect'],
         reporter: 'spec',
         bail: true
       },
-      unit: ['<%= test_dir %>/macrocell_unit.test.js'],
+      unit: '<%= test_dir %>/*_unit.test.js',
+      integration: '<%= test_dir %>/*_integration.test.js',
       all: [
-        '<%= test_dir %>/macrocell_unit.test.js'
+        '<%= test_dir %>/*_unit.test.js',
+        '<%= test_dir %>/*_integration.test.js'
       ]
     },
 
