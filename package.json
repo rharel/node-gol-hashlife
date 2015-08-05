@@ -1,7 +1,7 @@
 {
   "name": "node-gol-hashlife",
-  "description": "Wa-Tor population dynamics simulation for Node.js and the browser.",
-  "version": "0.1.0",
+  "description": "Hashlife algorithm for Conway's Game of Life.",
+  "version": "0.1.0alpha",
   "homepage": "https://github.com/rharel/node-gol-hashlife",
   "author": {
     "name": "Raoul Harel",
@@ -34,10 +34,10 @@
   "keywords": [
     "cellular",
     "automata",
-    "wa-tor",
+    "gol",
+    "conway",
+    "game of life",
     "simulation",
-    "Alexander Keewatin Dewdney",
-    "sharks",
-    "fish"
+    "hashlife"
   ]
 }
