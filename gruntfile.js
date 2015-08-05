@@ -2,7 +2,7 @@
  @author Raoul Harel
  @license The MIT license (LICENSE.txt)
  @copyright 2015 Raoul Harel
- @url rharel/node-wa-tor on GitHub
+ @url rharel/node-gol-hashlife on GitHub
 */
 
 module.exports = function(grunt) {
@@ -69,29 +69,29 @@ module.exports = function(grunt) {
       },
       release: {
         files: {
-          '<%= dist_dir %>/avl.js': '<%= lib_dir %>/avl.coffee'
+          '<%= dist_dir %>/gol.js': '<%= lib_dir %>/gol.coffee'
         }
       }
     },
 
     mochacli: {
       options: {
-        require: ['should'],
+        require: ['should', 'expect'],
         reporter: 'spec',
         bail: true
       },
-      unit: ['<%= test_dir %>/avl_unit.test.js'],
-      integration: ['<%= test_dir %>/avl_integration.test.js'],
+      unit: '<%= test_dir %>/*_unit.test.js',
+      integration: '<%= test_dir %>/*_integration.test.js',
       all: [
-        '<%= test_dir %>/avl_unit.test.js',
-        '<%= test_dir %>/avl_integration.test.js'
+        '<%= test_dir %>/*_unit.test.js',
+        '<%= test_dir %>/*_integration.test.js'
       ]
     },
 
     uglify: {
       release: {
         files: {
-          '<%= dist_dir %>/avl.min.js': ['<%= dist_dir %>/avl.js']
+          '<%= dist_dir %>/gol.min.js': ['<%= dist_dir %>/gol.js']
         }
       }
     }

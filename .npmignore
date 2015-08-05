@@ -1,4 +1,6 @@
 # Code editor-specific excludes
-.idea
+.idea/
 .gitignore
 .travis.yml
+test/perf/logs/
+*.js.map

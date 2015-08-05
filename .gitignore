@@ -3,9 +3,12 @@ lib/*.js
 lib/*.js.map
 test/*.js
 test/*.js.map
+test/perf/*.js
+test/perf/*.js.map
+test/perf/logs/
 
 # Node.js-specific excludes
-node_modules
+node_modules/
 
 # Code editor-specific excludes
-.idea
+.idea/
