@@ -200,15 +200,15 @@ describe 'macro-cell unit', ->
         m = new MacroCell(nw, ne, sw, se)
 
         it 'should have north composed of [nw.east, ne.west]', ->
-          should_have_children(m.n(), nw.ne, ne.nw, nw.se, ne.sw)
+          should_have_children(m.n, nw.ne, ne.nw, nw.se, ne.sw)
         it 'should have south composed of [sw.east, se.west]', ->
-          should_have_children(m.s(), sw.ne, se.nw, sw.se, se.sw)
+          should_have_children(m.s, sw.ne, se.nw, sw.se, se.sw)
         it 'should have west composed of [nw.south, sw.north]', ->
-          should_have_children(m.w(), nw.sw, nw.se, sw.nw, sw.ne)
+          should_have_children(m.w, nw.sw, nw.se, sw.nw, sw.ne)
         it 'should have east composed of [ne.south, se.north]', ->
-          should_have_children(m.e(), ne.sw, ne.se, se.nw, se.ne)
+          should_have_children(m.e, ne.sw, ne.se, se.nw, se.ne)
         it 'should have center composed of [nw.se, ne.sw, sw.ne, se.nw]', ->
-          should_have_children(m.c(), nw.se, ne.sw, sw.ne, se.nw)
+          should_have_children(m.c, nw.se, ne.sw, sw.ne, se.nw)
 
       describe 'future', ->
         m = MacroCell.from_array([

@@ -1,12 +1,10 @@
-gol = require('../../lib/gol')
-Simulation = gol.Simulation
-
+measure = require('./measure')
 helpers = require('./../helpers')
-by_x_then_y = helpers.by_x_then_y
 from_rle = helpers.from_rle
 
+
 # The 'rabbits' pattern at t = 0
-gen0 = from_rle(0, 0, 7, 3, 'o3b3o$3o2bo$bo!').sort(by_x_then_y)
+gen0 = from_rle(0, 0, 7, 3, 'o3b3o$3o2bo$bo!')
 # The pattern at t = 2^15
 gen2p15 = from_rle(-8158, -8166, 16313, 16057,
   'bo$2o$obo78$16310b2o$16311b2o$16310bo45$72b2o$72bobo$72bo86$16160b3o$
@@ -100,12 +98,6 @@ gen2p15 = from_rle(-8158, -8166, 16313, 16057,
   15131bo186$15626bobo$15627b2o$15627bo76$559bobo$559b2o$560bo123$15776b
   o$15777bo$15775b3o125$433bo$433bobo$433b2o243$320bo$318b2o$319b2o!'
   .replace(/\s/, '')
-).sort(by_x_then_y)
+)
 
-sim = new Simulation(17)
-sim.set(p.x, p.y) for p, i in gen0
-
-console.log('computing rabbits to t = 2^15...')
-console.time('future')
-sim._root.future()
-console.timeEnd('future')
+measure('rabbits', gen0, gen2p15, 15)

@@ -28,8 +28,8 @@ _remove_duplicates = (a, hash) ->
         return seen[key] = true
   )
 
-_step_single = (cell, neighbours) ->
-  nLiving = neighbours.reduce((p, c) -> p + c) + cell
+_step_single = (cell, nLivingNeighbours) ->
+  nLiving = nLivingNeighbours + cell
   if nLiving is 3
     return alive
   else if nLiving is 4
@@ -91,6 +91,11 @@ class MacroCell
         @_population =
           @nw._population + @ne._population +
           @sw._population + @se._population
+        @n = @library.get(@nw.ne, @ne.nw, @nw.se, @ne.sw)
+        @s = @library.get(@sw.ne, @se.nw, @sw.se, @se.sw)
+        @w = @library.get(@nw.sw, @nw.se, @sw.nw, @sw.ne)
+        @e = @library.get(@ne.sw, @ne.se, @se.nw, @se.ne)
+        @c = @library.get(@nw.se, @ne.sw, @sw.ne, @se.nw)
       else
         @_level = 1;
         @_population = @nw + @ne + @sw + @se
@@ -114,22 +119,16 @@ class MacroCell
   to_array: ->
     return @_to_row_array().reduce((p, c) -> p.concat(c))
 
-  n: -> @library.get(@nw.ne, @ne.nw, @nw.se, @ne.sw)
-  s: -> @library.get(@sw.ne, @se.nw, @sw.se, @se.sw)
-  w: -> @library.get(@nw.sw, @nw.se, @sw.nw, @sw.ne)
-  e: -> @library.get(@ne.sw, @ne.se, @se.nw, @se.ne)
-  c: -> @library.get(@nw.se, @ne.sw, @sw.ne, @se.nw)
-
   _base_case: ->
     return @library.get(
       _step_single(@nw.se,
-        [@nw.nw, @nw.ne, @nw.sw, @ne.nw, @ne.sw, @sw.nw, @sw.ne, @se.nw]),
+        @nw.nw + @nw.ne + @nw.sw + @ne.nw + @ne.sw + @sw.nw + @sw.ne + @se.nw),
       _step_single(@ne.sw,
-        [@nw.ne, @nw.se, @ne.nw, @ne.ne, @ne.se, @sw.ne, @se.nw, @se.ne]),
+        @nw.ne + @nw.se + @ne.nw + @ne.ne + @ne.se + @sw.ne + @se.nw + @se.ne),
       _step_single(@sw.ne,
-        [@nw.sw, @nw.se, @ne.sw, @sw.nw, @sw.sw, @sw.se, @se.nw, @se.sw]),
+        @nw.sw + @nw.se + @ne.sw + @sw.nw + @sw.sw + @sw.se + @se.nw + @se.sw),
       _step_single(@se.nw,
-        [@nw.se, @ne.sw, @ne.se, @sw.ne, @sw.se, @se.ne, @se.sw, @se.se]),
+        @nw.se + @ne.sw + @ne.se + @sw.ne + @sw.se + @se.ne + @se.sw + @se.se),
     )
 
   _recursive_case: ->
@@ -137,11 +136,11 @@ class MacroCell
     lvl1_ne = @ne.future()
     lvl1_sw = @sw.future()
     lvl1_se = @se.future()
-    lvl1_n = @n().future()
-    lvl1_s = @s().future()
-    lvl1_w = @w().future()
-    lvl1_e = @e().future()
-    lvl1_c = @c().future()
+    lvl1_n = @n.future()
+    lvl1_s = @s.future()
+    lvl1_w = @w.future()
+    lvl1_e = @e.future()
+    lvl1_c = @c.future()
 
     lvl2_nw = @library.get(lvl1_nw, lvl1_n, lvl1_w, lvl1_c).future()
     lvl2_ne = @library.get(lvl1_n, lvl1_ne, lvl1_c, lvl1_e).future()
@@ -153,7 +152,9 @@ class MacroCell
   future: ->
     if @_result?
       return @_result
-    else if (@_level is 2)
+    else if @_population is 0
+      return @_result = @nw
+    else if @_level is 2
       return @_result = @_base_case()
     else if @_level > 2
       return @_result = @_recursive_case()
@@ -178,7 +179,7 @@ class MacroCell
 class Library
   @_hash: (nw, ne, sw, se) ->
     if nw._level? and nw._level >= 1
-      return [nw, ne, sw, se].map((x) -> x.id).join('-')
+      return "#{nw.id}-#{ne.id}-#{sw.id}-#{se.id}"
     else
       return ((nw << 3) |
               (ne << 2) |
@@ -193,10 +194,13 @@ class Library
 
   get: (nw, ne, sw, se) ->
     key = Library._hash(nw, ne, sw, se)
-    if !@_map[key]?
+    value = @_map[key]
+    if value is undefined
       @_map[key] = new MacroCell(nw, ne, sw, se, @_id, this)
       ++ @_id
-    return @_map[key]
+      return @_map[key]
+    else
+      return value
 
 
 
@@ -296,11 +300,11 @@ class Simulation
         return @_get(t - h, _cell.future(), _tx, _ty)
       else
         if t > 0
-          n = @_get(t, _cell.n(), _tx, _ty + h)
-          s = @_get(t, _cell.s(), _tx, _ty - h)
-          e = @_get(t, _cell.e(), _tx + h, _ty)
-          w = @_get(t, _cell.w(), _tx - h, _ty)
-          c = @_get(t, _cell.c(), _tx, _ty)
+          n = @_get(t, _cell.n, _tx, _ty + h)
+          s = @_get(t, _cell.s, _tx, _ty - h)
+          e = @_get(t, _cell.e, _tx + h, _ty)
+          w = @_get(t, _cell.w, _tx - h, _ty)
+          c = @_get(t, _cell.c, _tx, _ty)
           living = living.concat(n, s, e, w, c)
 
         nw = @_get(t, _cell.nw, _tx - h, _ty + h)
