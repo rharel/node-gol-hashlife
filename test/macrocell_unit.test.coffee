@@ -4,7 +4,7 @@
  @copyright 2015 Raoul Harel
  @url rharel/node-gol-hashlife on GitHub
 ###
-  
+
 gol = require('../lib/gol')
 MacroCell = gol.MacroCell
 dead = gol.dead
