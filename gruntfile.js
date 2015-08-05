@@ -76,7 +76,7 @@ module.exports = function(grunt) {
 
     mochacli: {
       options: {
-        require: ['should', 'expect'],
+        require: ['should', 'chai'],
         reporter: 'spec',
         bail: true
       },
