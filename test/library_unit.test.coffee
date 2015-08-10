@@ -43,14 +43,6 @@ describe 'library unit', ->
         .should.be.eql(
           [0...16].map((x) -> x.toString()).sort())
 
-    it 'should be equal the combination of child ids for level >=2 cells', ->
-      nw = { _level: 2, id: 0 }
-      ne = { _level: 2, id: 1 }
-      sw = { _level: 2, id: 2 }
-      se = { _level: 2, id: 3 }
-
-      Library._hash(nw, ne, sw, se).should.be.equal('0-1-2-3')
-
   describe 'lookup', ->
     lib = new Library
     it 'should return cached cell if it exists', ->

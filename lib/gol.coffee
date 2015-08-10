@@ -207,12 +207,23 @@ class MacroCell
 class Library
   @_hash: (nw, ne, sw, se) ->
     if nw._level? and nw._level >= 1
-      return "#{nw.id}-#{ne.id}-#{sw.id}-#{se.id}"
+      result = 1
+      result = 31 * result + nw.id;
+      result = 31 * result + ne.id;
+      result = 31 * result + sw.id;
+      result = 31 * result + se.id;
+      return result;
     else
       return ((nw << 3) |
               (ne << 2) |
               (sw << 1) |
                se).toString()
+
+  @_equals: (cell, nw, ne, sw, se) ->
+    return nw is cell.nw and
+           ne is cell.ne and
+           sw is cell.sw and
+           se is cell.se
 
   constructor: ->
     @_id = 0
@@ -222,13 +233,22 @@ class Library
 
   get: (nw, ne, sw, se) ->
     key = Library._hash(nw, ne, sw, se)
-    value = @_map[key]
-    if value is undefined
-      @_map[key] = new MacroCell(nw, ne, sw, se, @_id, this)
-      ++ @_id
-      return @_map[key]
+    bucket = @_map[key]
+    if bucket is undefined
+      @_map[key] = []
+      bucket = @_map[key]
     else
-      return value
+      i = 0
+      while i < bucket.length
+        candidate = bucket[i]
+        if Library._equals(candidate, nw, ne, sw, se)
+          return candidate
+        ++i
+
+    new_entry = new MacroCell(nw, ne, sw, se, @_id, this)
+    ++ @_id
+    bucket.push(new_entry)
+    return new_entry
 
 
 
