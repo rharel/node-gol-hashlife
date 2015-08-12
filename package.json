@@ -2,7 +2,7 @@
   "name": "node-gol-hashlife",
   "description": "Hashlife algorithm for Conway's Game of Life.",
   "license": "MIT",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "homepage": "https://github.com/rharel/node-gol-hashlife",
   "author": {
     "name": "Raoul Harel",
